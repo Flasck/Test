@@ -3,7 +3,7 @@ name: Lint, Build, and Deploy
 on:
   push:
     branches:
-      - main 
+      - main
 
 jobs:
   lint:
@@ -43,19 +43,7 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Export static site
-        run: npm run export
-
-      - name: Deploy to frontend-build branch
-        run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-          git fetch origin
-          git checkout -b frontend-build
-          rm -rf .gitignore
-          echo "out/" >> .gitignore
-          git add out/
-          git commit -m "Deploy frontend build"
-          git push origin frontend-build --force
-
+      - name: Deploy with gh-pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: dist
